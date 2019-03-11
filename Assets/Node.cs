@@ -6,6 +6,7 @@ public class Node : MonoBehaviour {
 
     // Use this for initialization
     public int index;
+    public bool hideout;
     void Start () {
 		
 	}
