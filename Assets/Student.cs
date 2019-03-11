@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -117,30 +117,9 @@ public class Student : MonoBehaviour
                 return rv;
             }
         }
-
         return -1;
     }
 
-    public void Dead()
-    {
-        // called when killed
-        life = 0;
-        agent.GetComponent<MeshRenderer>().material.color = Color.yellow;
-        agent.GetComponent<CapsuleCollider>().enabled = false;
-        agent.GetComponent<NavMeshAgent>().enabled = false;
-        //agent.SetDestination(agent.transform.position);
-        GameController.GetComponent<GameControllerCode>().studentsLeft--;
-        GameController.GetComponent<GameControllerCode>().studentsKilled++;
-    }
-
-    void Escaped()
-    {
-        agent.GetComponent<MeshRenderer>().material.color = Color.green;
-        GameController.GetComponent<GameControllerCode>().studentsLeft--;
-        agent.GetComponent<CapsuleCollider>().enabled = false;
-        agent.GetComponent<NavMeshAgent>().enabled = false;
-        life--;
-    }
     GameObject SelectNode()
     {
         // Last edit: 3.10
