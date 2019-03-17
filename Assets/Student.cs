@@ -87,7 +87,6 @@ public class Student : MonoBehaviour
             }
         }
     }
-
     void MoveToTarget()
     {
         if (!agent.pathPending && (agent.remainingDistance - agent.stoppingDistance) < 0.1f)
