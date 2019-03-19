@@ -156,6 +156,10 @@ public class Student : MonoBehaviour
         return selectedNode;
     }
 
+    public bool isHiding()
+    {
+        return hiding;
+    }
     void hide()
     {
         // hide in a room to avoid the killer

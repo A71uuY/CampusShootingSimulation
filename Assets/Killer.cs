@@ -52,6 +52,7 @@ public class Killer : MonoBehaviour
             if (killTarget != null)
             {
                 // kill student
+
                 if (Random.Range(0.0f, 1.0f) < KP) // Kill success
                 {
                     // kill success
@@ -66,7 +67,7 @@ public class Killer : MonoBehaviour
                     agent.SetDestination(RandomNode().transform.position);
             }
         }
-        else if(GameController.GetComponent<GameControllerCode>().getStatus() == 1)
+        else if (GameController.GetComponent<GameControllerCode>().getStatus() == 1)
             agent.GetComponent<NavMeshAgent>().enabled = false;
     }
 
@@ -87,10 +88,24 @@ public class Killer : MonoBehaviour
         GameObject studentFound = null;
         foreach (GameObject student in studentsAlive)
         {
-            if (agent != null && !agent.Raycast(student.transform.position, out hit)) // no obstacle. student is alive
+            if (killTarget.GetComponent<Student>().isHiding())
+            { // Hiding students are not easy to find
+                if (Random.Range(0, 2) == 1)
+                {
+                    if (agent != null && !agent.Raycast(student.transform.position, out hit)) // no obstacle. student is alive
+                    {
+                        found = true;
+                        studentsInSight.Add(student);
+                    }
+                }
+            }
+            else
             {
-                found = true;
-                studentsInSight.Add(student);
+                if (agent != null && !agent.Raycast(student.transform.position, out hit)) // no obstacle. student is alive
+                {
+                    found = true;
+                    studentsInSight.Add(student);
+                }
             }
         }
         if (!found)

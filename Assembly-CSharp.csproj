@@ -57,7 +57,6 @@
      <Compile Include="Assets\Killer.cs" />
      <Compile Include="Assets\Node.cs" />
      <Compile Include="Assets\Student.cs" />
-     <Compile Include="Assets\tempCodeRunnerFile.cs" />
      <None Include="Assets\NewSurfaceShader.shader" />
  <Reference Include="UnityEditor.StandardEvents">
  <HintPath>D:/Arisa/Work/Unity/CampusShooting/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
@@ -271,12 +270,6 @@
  </Reference>
  <Reference Include="UnityEngine.SpatialTracking">
  <HintPath>D:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.Analytics">
- <HintPath>C:/Users/CatheL1na/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.16/UnityEngine.Analytics.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.StandardEvents">
- <HintPath>C:/Users/CatheL1na/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.13/UnityEngine.StandardEvents.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>D:/Program Files/Unity/Editor/Data/MonoBleedingEdge/lib/mono/unity/mscorlib.dll</HintPath>
