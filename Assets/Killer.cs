@@ -14,6 +14,8 @@ public class Killer : MonoBehaviour
     public float KP; // Kill probability
     public int ID; // ID of the killer
     public int KillScore = 0; // Number of students killed
+    public float viewAngle = 160;
+    public float shootTime = 1; // Time to shoot
     private NavMeshAgent agent;
     private GameObject exit;
     private GameObject GameController;
@@ -52,14 +54,7 @@ public class Killer : MonoBehaviour
             if (killTarget != null)
             {
                 // kill student
-
-                if (Random.Range(0.0f, 1.0f) < KP) // Kill success
-                {
-                    // kill success
-                    killTarget.GetComponent<Student>().Dead();
-                    KillScore++;
-                    studentsAlive.Remove(killTarget);
-                }
+                Shoot();
             }
             else
             {
@@ -67,10 +62,27 @@ public class Killer : MonoBehaviour
                     agent.SetDestination(RandomNode().transform.position);
             }
         }
-        else if (GameController.GetComponent<GameControllerCode>().getStatus() == 1)
+        else if (GameController.GetComponent<GameControllerCode>().getStatus() == -1)
             agent.GetComponent<NavMeshAgent>().enabled = false;
     }
 
+    IEnumerator StandBeforeShoot()
+    {
+        yield return new WaitForSeconds(shootTime);
+    }
+    void Shoot()
+    {
+        agent.enabled = false;
+        StandBeforeShoot();
+        if (Random.Range(0.0f, 1.0f) < KP) // Kill success
+        {
+            // kill success
+            killTarget.GetComponent<Student>().Dead();
+            KillScore++;
+            studentsAlive.Remove(killTarget);
+        }
+        agent.enabled = true;
+    }
     GameObject RandomNode()
     {
         // Get a node randomly
@@ -83,28 +95,41 @@ public class Killer : MonoBehaviour
     {
         // find a studnet in sight to kill
         NavMeshHit hit;
+        float angle;
         studentsInSight.Clear();
         bool found = false;
         GameObject studentFound = null;
         foreach (GameObject student in studentsAlive)
         {
-            if (killTarget.GetComponent<Student>().isHiding())
-            { // Hiding students are not easy to find
-                if (Random.Range(0, 2) == 1)
-                {
-                    if (agent != null && !agent.Raycast(student.transform.position, out hit)) // no obstacle. student is alive
+            if (student.GetComponent<Student>().life > 0)
+            {
+                if (student.GetComponent<Student>().isHiding())
+                { // Hiding students are not easy to find
+                    if (Random.Range(0, 2) == 1)
                     {
-                        found = true;
-                        studentsInSight.Add(student);
+                        if (student != null && !agent.Raycast(student.transform.position, out hit)) // no obstacle. student is alive
+                        {
+                            angle = Vector3.Angle(student.transform.position - transform.position, transform.forward);
+                            if (angle < viewAngle / 2)
+                            {
+                                found = true;
+                                studentsInSight.Add(student);
+                            }
+
+                        }
                     }
                 }
-            }
-            else
-            {
-                if (agent != null && !agent.Raycast(student.transform.position, out hit)) // no obstacle. student is alive
+                else
                 {
-                    found = true;
-                    studentsInSight.Add(student);
+                    if (student != null && !agent.Raycast(student.transform.position, out hit)) // no obstacle. student is alive
+                    {
+                        angle = Vector3.Angle(student.transform.position - transform.position, transform.forward);
+                        if (angle < viewAngle / 2)
+                        {
+                            found = true;
+                            studentsInSight.Add(student);
+                        }
+                    }
                 }
             }
         }

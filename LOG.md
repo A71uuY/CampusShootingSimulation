@@ -6,3 +6,8 @@
 
 ## 20 MAR
 + Hiding students are not easy to find now (50% rate)
+
+## 29 MAR
++ Add view angle for killer
++ Killer has to stand still to shoot now.
++ Fix some bugs and create some.
