@@ -6,7 +6,7 @@ This project aims to simulate the Campus Shooting in an virtual environment. The
 
 ## Students
 
-We suppose that students know the campus well, so they are able to run directly to the exit of each environment. Additionally, they can choose o hide rather than escape.
+We suppose that students know the campus well, so they are able to run directly to the exit of each environment. Additionally, they can choose to hide rather than escape.
 
 ## Killer
 
