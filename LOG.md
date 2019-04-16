@@ -11,3 +11,7 @@
 + Add view angle for killer
 + Killer has to stand still to shoot now.
 + Fix some bugs and create some.
+
+## 16 APR
++ Implement q-learning. (Mostly)
++ TODO: reward calculation and state calculation

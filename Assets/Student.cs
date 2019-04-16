@@ -21,6 +21,7 @@ public class Student : MonoBehaviour
     private int exitIndex;
     private bool haveTarget;
     private bool hiding;
+    private List<GameObject> hideouts = new List<GameObject>();
     private List<GameObject> nodes = new List<GameObject>();
     private List<GameObject> nodesInSight = new List<GameObject>();
     private List<GameObject> exits = new List<GameObject>();
@@ -43,6 +44,10 @@ public class Student : MonoBehaviour
         foreach (GameObject n in GameObject.FindGameObjectsWithTag("exit"))
         {
             exits.Add(n);
+        }
+        foreach (GameObject n in GameObject.FindGameObjectsWithTag("hideout"))
+        {
+            hideouts.Add(n);
         }
     }
 

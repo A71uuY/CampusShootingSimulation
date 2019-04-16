@@ -23,7 +23,7 @@ public class Killer : MonoBehaviour
     private List<GameObject> nodes = new List<GameObject>();
     private List<GameObject> nodesInSight = new List<GameObject>();
     private List<GameObject> studentsInSight = new List<GameObject>();
-    private List<GameObject> studentsAlive = new List<GameObject>();
+    private List<GameObject> studentInScene = new List<GameObject>();
     private List<int> visited = new List<int>();
 
     // Use this for initialization
@@ -36,7 +36,7 @@ public class Killer : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         foreach (GameObject a in GameObject.FindGameObjectsWithTag("agent"))
         {
-            studentsAlive.Add(a);
+            studentInScene.Add(a);
         }
         foreach (GameObject n in GameObject.FindGameObjectsWithTag("node"))
         {
@@ -73,13 +73,15 @@ public class Killer : MonoBehaviour
     void Shoot()
     {
         agent.enabled = false;
+        GameController.GetComponent<GameControllerCode>().shootCounter++;
+        GameController.GetComponent<GameControllerCode>().shootHeard();
         StandBeforeShoot();
         if (Random.Range(0.0f, 1.0f) < KP) // Kill success
         {
             // kill success
-            killTarget.GetComponent<Student>().Dead();
+            killTarget.GetComponent<StudentLearn>().Dead();
             KillScore++;
-            studentsAlive.Remove(killTarget);
+            studentInScene.Remove(killTarget);
         }
         agent.enabled = true;
     }
@@ -93,17 +95,17 @@ public class Killer : MonoBehaviour
 
     GameObject GetStudentInSight()
     {
-        // find a studnet in sight to kill
+        // Find a studnet in sight to kill
         NavMeshHit hit;
         float angle;
         studentsInSight.Clear();
         bool found = false;
         GameObject studentFound = null;
-        foreach (GameObject student in studentsAlive)
+        foreach (GameObject student in studentInScene)
         {
-            if (student.GetComponent<Student>().life > 0)
+            if (student.GetComponent<StudentLearn>().life > 0)
             {
-                if (student.GetComponent<Student>().isHiding())
+                if (student.GetComponent<StudentLearn>().isHiding())
                 { // Hiding students are not easy to find
                     if (Random.Range(0, 2) == 1)
                     {

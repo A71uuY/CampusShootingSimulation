@@ -9,7 +9,12 @@ public class GameControllerCode : MonoBehaviour
     private List<GameObject> students = new List<GameObject>();
     public int studentsLeft;
     public int studentNumber = 0;
+    public float timeStart;
+    public float alpha = 0.1f;  // Learning rate
+    public float epsilon = 0.8f;  // Greedy
+    public float gamma = 0.5f;  // Reward discount
     public int studentsKilled;
+    public int shootCounter;
     public int gameStatus; // 0, 1, -1 for ready, running, end
     void Start()
     {
@@ -18,6 +23,7 @@ public class GameControllerCode : MonoBehaviour
             students.Add(n);
             studentNumber++;
         }
+        shootCounter=0;
         studentsLeft = studentNumber;
         studentsKilled = 0;
         gameStatus = 0;
@@ -27,10 +33,22 @@ public class GameControllerCode : MonoBehaviour
     void Update()
     {
         if (studentsLeft == 0) // Game End. All students dead
+        {
             gameStatus = -1;
+            Debug.Log("Game End");
+        }
         else if (Input.GetMouseButtonDown(0)) // mouse click. game start
         {
             gameStatus = 1;
+            timeStart = Time.time;
+        }
+    }
+
+    public void shootHeard()
+    {
+        foreach(GameObject s in students)
+        {
+            s.GetComponent<StudentLearn>().gunShotHeard+=1;
         }
     }
 
