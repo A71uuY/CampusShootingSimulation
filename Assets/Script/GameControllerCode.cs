@@ -31,7 +31,6 @@ public class GameControllerCode : MonoBehaviour
         gameStatus = 0;
         envHeight = 10.0f;
         envWidth = 10.0f;
-        envWH = envHeight+envWidth;
     }
 
     // Update is called once per frame
