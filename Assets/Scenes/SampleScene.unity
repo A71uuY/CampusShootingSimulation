@@ -2678,7 +2678,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   studentsLeft: 0
   studentNumber: 0
+  timeStart: 0
+  alpha: 0.1
+  epsilon: 0.8
+  gamma: 0.5
   studentsKilled: 0
+  shootCounter: 0
   gameStatus: 0
 --- !u!4 &1124208996
 Transform:
@@ -3221,7 +3226,7 @@ GameObject:
   - component: {fileID: 1300116146}
   m_Layer: 0
   m_Name: Killer
-  m_TagString: Untagged
+  m_TagString: killer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4024,8 +4029,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c84a592dccc2f541b0ba1cdd436e638, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eMin: 0.1
   ID: 0
   life: 0
+  gunShotHeard: 0
   statusString: 
 --- !u!1 &1568312313
 GameObject:

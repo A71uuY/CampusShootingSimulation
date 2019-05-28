@@ -8,6 +8,7 @@ TagManager:
   - node
   - exit
   - hideout
+  - killer
   layers:
   - Default
   - TransparentFX

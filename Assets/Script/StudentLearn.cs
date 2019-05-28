@@ -18,6 +18,7 @@ public class StudentLearn : MonoBehaviour
     private float[][] qtable;
     private float reward = 0.0f;
     private int action;  // 0 if run; 1 if hide
+    private float disToShooter;
     private int stateNow;
     private int stateNext;
     private float episodeReward = 0.0f;
@@ -33,7 +34,7 @@ public class StudentLearn : MonoBehaviour
     private List<GameObject> hideouts = new List<GameObject>();
     private List<GameObject> exits = new List<GameObject>();
 
-
+    private GameObject killer;
 
     void Start()
     {
@@ -43,6 +44,8 @@ public class StudentLearn : MonoBehaviour
         statusString = "Init";
         GameController = GameObject.FindGameObjectWithTag("GameController");
         agent = GetComponent<NavMeshAgent>();
+        killer = GameObject.FindGameObjectWithTag("killer");
+        disToShooter = (killer.transform.position.x - agent.transform.position.x) + (killer.transform.position.y - agent.transform.position.y);
         foreach (GameObject n in GameObject.FindGameObjectsWithTag("hideout"))
         {
             hideouts.Add(n);
@@ -77,6 +80,11 @@ public class StudentLearn : MonoBehaviour
             CheckStateNow(); // Get State
             if (statusString == "Running")
             { // Strategy while running
+                if (gunShotHeard > 0)
+                {
+                    gunShotHeard = 0;
+                    disToShooter = (killer.transform.position.x - agent.transform.position.x) + (killer.transform.position.y - agent.transform.position.y);
+                }
                 if ((GetNearestHideout() != null) && targetHideout != ignoreHideout) // Found a hideout nearby. Make a decision
                 {
                     MakeDecision();
@@ -88,7 +96,7 @@ public class StudentLearn : MonoBehaviour
                 if (gunShotHeard > 0)
                 {
                     gunShotHeard = 0;
-                    MakeDecision();
+                    disToShooter = (killer.transform.position.x - agent.transform.position.x) + (killer.transform.position.y - agent.transform.position.y);
                 }
             }
         }
@@ -98,9 +106,25 @@ public class StudentLearn : MonoBehaviour
     {  // Check state by some strategy
         if (statusString == "Running")
         {
+            // Manhattan distance to killer and exit
+            float res = disToShooter/GameController.GetComponent<GameControllerCode>().getHW();
+            if(res <= 1/3)
+                stateNow = 0;
+            else if(res <= 2/3 && res > 1/3)
+                stateNow = 1;
+            else if(res > 2/3)
+                stateNow = 2;
         }
         else if (statusString == "Hiding")
         {
+            // Manhattan distance to killer 
+            float res = disToShooter/GameController.GetComponent<GameControllerCode>().getHW();
+            if(res <= 1/3)
+                stateNow = 3;
+            else if(res <= 2/3 && res > 1/3)
+                stateNow = 4;
+            else if(res > 2/3)
+                stateNow = 5;
         }
     }
     GameObject GetNearestHideout()
@@ -112,7 +136,7 @@ public class StudentLearn : MonoBehaviour
         {
             if (!agent.Raycast(h.transform.position, out hit))  // Hideout in view and around
             {
-                if (Vector3.Distance(agent.transform.position, h.transform.position) < dis)
+                if (Vector3.Distance(agent.transform.position, h.transform.position) < dis)  // Nearest
                 {
                     dis = Vector3.Distance(agent.transform.position, h.transform.position);
                     result = h;
@@ -196,6 +220,8 @@ public class StudentLearn : MonoBehaviour
     public void Dead()
     {
         // called when killed
+        reward=-10;
+        UpdateQtable();
         life = 0;
         agent.GetComponent<MeshRenderer>().material.color = Color.yellow;
         agent.GetComponent<CapsuleCollider>().enabled = false;
@@ -212,6 +238,8 @@ public class StudentLearn : MonoBehaviour
         agent.GetComponent<CapsuleCollider>().enabled = false;
         agent.GetComponent<NavMeshAgent>().enabled = false;
         life--;
+        reward=10;
+        UpdateQtable();
     }
 
 }

@@ -15,3 +15,8 @@
 ## 16 APR
 + Implement q-learning. (Mostly)
 + TODO: reward calculation and state calculation
+
+## 28 MAY
++ State check. Check state when gunshot heard. Map manhattan distance to 3 levels(depending on the width+height of the whole environment).
++ Long term reward set(dead or alive)
++ TODO: instance reward and random behaviors.

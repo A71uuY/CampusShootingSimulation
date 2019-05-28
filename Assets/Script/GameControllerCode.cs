@@ -8,6 +8,8 @@ public class GameControllerCode : MonoBehaviour
     // hope that the speed of game rate and the start&end can be controlled by it
     private List<GameObject> students = new List<GameObject>();
     public int studentsLeft;
+    public float envWidth;
+    public float envHeight;
     public int studentNumber = 0;
     public float timeStart;
     public float alpha = 0.1f;  // Learning rate
@@ -27,6 +29,9 @@ public class GameControllerCode : MonoBehaviour
         studentsLeft = studentNumber;
         studentsKilled = 0;
         gameStatus = 0;
+        envHeight = 10.0f;
+        envWidth = 10.0f;
+        envWH = envHeight+envWidth;
     }
 
     // Update is called once per frame
@@ -44,6 +49,10 @@ public class GameControllerCode : MonoBehaviour
         }
     }
 
+    public float getHW()
+    {
+        return envHeight+envWidth;
+    }
     public void shootHeard()
     {
         foreach(GameObject s in students)
