@@ -13,6 +13,7 @@ public class Killer : MonoBehaviour
     // END(3.26)
     public float KP; // Kill probability
     public int ID; // ID of the killer
+    private int nextNodeID = 0;
     public int KillScore = 0; // Number of students killed
     public float viewAngle = 160;
     public float shootTime = 1; // Time to shoot
@@ -38,7 +39,7 @@ public class Killer : MonoBehaviour
         {
             studentInScene.Add(a);
         }
-        foreach (GameObject n in GameObject.FindGameObjectsWithTag("node"))
+        foreach (GameObject n in GameObject.FindGameObjectsWithTag("killerPathPoint"))
         {
             nodes.Add(n);
             visited.Add(0);
@@ -59,7 +60,7 @@ public class Killer : MonoBehaviour
             else
             {
                 if (!agent.pathPending && (agent.remainingDistance - agent.stoppingDistance) < 0.1f)
-                    agent.SetDestination(RandomNode().transform.position);
+                    agent.SetDestination(NextNode().transform.position);
             }
         }
         else if (GameController.GetComponent<GameControllerCode>().getStatus() == -1)
@@ -70,6 +71,7 @@ public class Killer : MonoBehaviour
     {
         yield return new WaitForSeconds(shootTime);
     }
+
     void Shoot()
     {
         agent.enabled = false;
@@ -85,11 +87,17 @@ public class Killer : MonoBehaviour
         }
         agent.enabled = true;
     }
-    GameObject RandomNode()
+    GameObject NextNode()
     {
-        // Get a node randomly
+        // Get the next node to go
         GameObject node = null;
-        node = nodes[Random.Range(0, nodes.Count)];
+        foreach(GameObject n in nodes)
+        {
+            if(n.GetComponent<Node>().index == nextNodeID)
+                node = n;
+        }
+        Debug.Log("killer heading to point"+nextNodeID.ToString());
+        nextNodeID ++;
         return node;
     }
 
@@ -103,7 +111,7 @@ public class Killer : MonoBehaviour
         GameObject studentFound = null;
         foreach (GameObject student in studentInScene)
         {
-            if (student.GetComponent<StudentLearn>().life > 0)
+            if (student.GetComponent<StudentLearn>().inBuilding == 1)
             {
                 if (student.GetComponent<StudentLearn>().isHiding())
                 { // Hiding students are not easy to find

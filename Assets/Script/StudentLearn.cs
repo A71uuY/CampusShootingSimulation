@@ -8,7 +8,6 @@ using UnityEngine.AI;
 //Check state.
 public class StudentLearn : MonoBehaviour
 {
-
     // Use this for initialization
     private float gamma;  // reward discount
     private float epsilon;  // greedy
@@ -23,7 +22,7 @@ public class StudentLearn : MonoBehaviour
     private int stateNext;
     private float episodeReward = 0.0f;
     public int ID;
-    public int life; // 1 if alive, 0 if dead
+    public int inBuilding; // 1 if alive, 0 if dead
     public int gunShotHeard;
     private bool hiding;
     private GameObject targetHideout;
@@ -38,7 +37,7 @@ public class StudentLearn : MonoBehaviour
 
     void Start()
     {
-        life = 1;
+        inBuilding = 1;
         gunShotHeard = 0;
         hiding = false;
         statusString = "Init";
@@ -62,8 +61,8 @@ public class StudentLearn : MonoBehaviour
         qtable = new float[states][];
         for (int i = 0; i < states; i++)
         {
-            qtable[i] = new float[2];
-            for (int j = 0; j < 2; i++)
+            qtable[i] = new float[2]; // 6 states, 2 actions
+            for (int j = 0; j < 2; j++)
                 qtable[i][j] = 0;
         }
     }
@@ -71,7 +70,7 @@ public class StudentLearn : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameController.GetComponent<GameControllerCode>().getStatus() == 1 && (life == 1)) // Gamestart. agent in environment
+        if (GameController.GetComponent<GameControllerCode>().getStatus() == 1 && (inBuilding == 1)) // Gamestart. agent in environment
         {
             if (statusString == "Init")
                 RunAction();
@@ -91,7 +90,7 @@ public class StudentLearn : MonoBehaviour
                     ignoreHideout = targetHideout;
                 }
             }
-            else if (statusString == "hiding") // Heard a gunshot. Make a decision
+            else if (statusString == "Hiding") // Heard a gunshot. Make a decision
             { // Strategy while hiding
                 if (gunShotHeard > 0)
                 {
@@ -181,6 +180,7 @@ public class StudentLearn : MonoBehaviour
     void UpdateQtable()
     {
         qtable[stateNow][action] += alpha * (reward + gamma * qtable[stateNext].Max() - qtable[stateNow][action]);
+        reward = 0.0f; // Clear reward to zero
     }
     void CheckEscaped()
     {
@@ -210,7 +210,7 @@ public class StudentLearn : MonoBehaviour
     void HideAction()
     {
         agent.SetDestination(targetHideout.transform.position);
-        statusString = "hiding";
+        statusString = "Hiding";
     }
     public bool isHiding()
     {
@@ -222,24 +222,29 @@ public class StudentLearn : MonoBehaviour
         // called when killed
         reward=-10;
         UpdateQtable();
-        life = 0;
+        inBuilding = 0;
         agent.GetComponent<MeshRenderer>().material.color = Color.yellow;
         agent.GetComponent<CapsuleCollider>().enabled = false;
         agent.GetComponent<NavMeshAgent>().enabled = false;
         //agent.SetDestination(agent.transform.position);
         GameController.GetComponent<GameControllerCode>().studentsLeft--;
+        GameController.GetComponent<GameControllerCode>().studentsAlive--;
         GameController.GetComponent<GameControllerCode>().studentsKilled++;
     }
 
     void Escaped()
     {
         agent.GetComponent<MeshRenderer>().material.color = Color.green;
-        GameController.GetComponent<GameControllerCode>().studentsLeft--;
         agent.GetComponent<CapsuleCollider>().enabled = false;
         agent.GetComponent<NavMeshAgent>().enabled = false;
-        life--;
+        inBuilding = 0;
+        GameController.GetComponent<GameControllerCode>().studentsLeft--;
         reward=10;
         UpdateQtable();
     }
 
+    public float[][] getQTable()
+    {
+        return qtable;
+    }
 }

@@ -9,6 +9,7 @@ TagManager:
   - exit
   - hideout
   - killer
+  - killerPathPoint
   layers:
   - Default
   - TransparentFX
